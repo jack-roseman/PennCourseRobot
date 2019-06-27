@@ -1,0 +1,11 @@
+{
+  "name": "penncourserobot",
+  "version": "1.0.0",
+  "description": "Closing the auto-registration loop with PennCourseNotify",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jack Roseman",
+  "license": "ISC"
+}
