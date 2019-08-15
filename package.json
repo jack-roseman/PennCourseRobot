@@ -2,10 +2,16 @@
   "name": "penncourserobot",
   "version": "1.0.0",
   "description": "Closing the auto-registration loop with PennCourseNotify",
-  "main": "app.js",
+  "main": "robot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jack Roseman",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mail-notifier": "^0.5.0",
+    "node-persist": "^3.0.5",
+    "puppeteer": "^1.19.0"
+  }
 }
