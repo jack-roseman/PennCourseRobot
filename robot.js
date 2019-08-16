@@ -19,14 +19,6 @@ class PCRCredentials {
     }
 }
 
-/**
- * This function gets the next priority user to be signed in given 
- * @param {String} classTitle // the name of the class. e.g. "EAS-203-001"
- */
-async function getPriorityUser(classTitle) {
-    const usr = await dli.getDummyUser();
-    return usr;
-}
 
 /**
  * This function signs a user into PennInTouch
@@ -85,7 +77,7 @@ module.exports.signInUser = async (userCredentials) => {
             return out;
         });
         userCredentials.cookies = ckies;
-        await storage.setItem('me', userCredentials);
+        await storage.setItem('me', userCredentials); //TODO FIX THIS!!!
         await page.reload();
     } else {
         console.log('Successfully logged in as ' + pennkey);
@@ -109,7 +101,6 @@ module.exports.signInUser = async (userCredentials) => {
 async function registerClass(userCredentials, classTitle, gradeType) {
     const parts = classTitle.split('-');
     const pennkey = userCredentials.username;
-    const password = userCredentials.password;
     const page = await signInUser(userCredentials);
 
     // Click "Register for courses" tag
@@ -205,11 +196,11 @@ async function startListening() {
         }) // session closed
         .on('mail', async (mail) => {
             const addr = mail.from[0].address;
-            if (addr == 'penncoursenotification@gmail.com' || addr == 'jackroseman33@yahoo.com') {
+            if (addr == 'penncoursenotification@gmail.com') {
                 const subj = mail.subject;
                 const patt = /[A-Z]*-[0-9]*-[0-9]*/;
                 var classTitle = subj.match(patt)[0];
-                const usr = await getPriorityUser(classTitle);
+                const usr = await dli.dequeUserFromClassWaitlist(classTitle);
                 registerClass(usr, classTitle, 'NN');
             }
         })
@@ -290,8 +281,8 @@ module.exports.onboardUser = async function (pennkey, password) {
     return new PCRCredentials(pennkey, password, ckies);
 };
 
-module.exports.addUserToClass = async function (user, clss) {
-    await dli.set(clss, user);
+module.exports.addUserToWaitlist = async function (user, clss) {
+    await dli.enqueUserToClassWaitlist(user, clss);
 };
 /**
  * DEPLOYED CODE
