@@ -14,7 +14,7 @@ module.exports.enqueUserToClassWaitlist = async function (clss, usr) {
             newq.push(usr);
             await storage.setItem(clss, newq);
         }
-    });
+    })
 }
 
 module.exports.dequeUserFromClassWaitlist = async function (clss) {

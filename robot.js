@@ -19,7 +19,6 @@ class PCRCredentials {
     }
 }
 
-
 /**
  * This function signs a user into PennInTouch
  * @param {PCRCredentials} userCredentials 
@@ -282,8 +281,41 @@ module.exports.onboardUser = async function (pennkey, password) {
 };
 
 module.exports.addUserToWaitlist = async function (user, clss) {
-    await dli.enqueUserToClassWaitlist(user, clss);
+    await dli.enqueUserToClassWaitlist(clss, user);
 };
+
+module.exports.registerNotificationFor = async function (clss) {
+    const browser = await puppeteer.launch({
+        headless: !DEBUG,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+
+    const page = await browser.newPage();
+    page.waitForNavigation();
+
+    // Goto penncoursenotify
+    const res = await page.goto('http://www.penncoursenotify.com');
+    await page.setViewport({
+        width: 1280,
+        height: 689
+    });
+
+    await page.evaluate((course) => {
+        document.querySelectorAll('input[name=course]')[0].value = course;
+    }, clss.replace(/-/g, ' '));
+
+    await page.evaluate((email) => {
+        document.querySelectorAll('input[name=email]')[0].value = email;
+    }, 'penncourserobot@gmail.com');
+
+    await page.waitForSelector('button[type=submit]');
+    await page.click('button[type=submit]');
+
+    const err = await page.evaluate(() => {
+        return document.querySelectorAll('.error')[0].textContent;
+    });
+    return err;
+}
 /**
  * DEPLOYED CODE
  * Uncomment code below before deploying
