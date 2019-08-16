@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 app.get('/onboardme/:pennkey/:password', async (req, res) => {
     const pennkey = req.params.pennkey;
     const password = req.params.password;
-    dli.initDatabase().then(() => robot.onboardUser(pennkey, password));
+    dli.initDatabase().then(() => await robot.onboardUser(pennkey, password));
     res.send(`Thanks, just saved ${pennkey} to the database.`);
 });
 
