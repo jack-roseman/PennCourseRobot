@@ -3,7 +3,7 @@ const notifier = require('mail-notifier');
 const dli = require('./data_layer_interface.js');
 const DELAY_BETWEEN_SELECTS = 1000;
 const PORT = 993;
-const DEBUG = true;
+const DEBUG = false;
 
 /**TODO - HIDE THESE CREDENTIALS */
 const PCR_EMAIL_USERNAME = 'penncourserobot@gmail.com';
