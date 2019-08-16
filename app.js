@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/', async (req, res) => {
     res.sendFile(Path.resolve(__dirname, 'public', 'registeruser.html'));
-
 });
+
 app.get('/onboardme/:pennkey/:password/:class', async (req, res) => {
     const pennkey = req.params.pennkey;
     const password = req.params.password;

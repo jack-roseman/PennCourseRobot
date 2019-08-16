@@ -176,7 +176,7 @@ async function registerClass(userCredentials, classTitle, gradeType) {
  * has just opened, then will search who is next to be registered * 
  */
 
-async function startListening() {
+async function startRobot() {
     const imap = {
         user: PCR_EMAIL_USERNAME,
         password: PCR_EMAIL_PASSWORD,
@@ -322,7 +322,7 @@ module.exports.registerNotificationFor = async function (clss) {
  */
 
 dli.initDatabase()
-    .then(startListening)
+    .then(startRobot)
     .catch((err) => {
         console.log(err);
     });
