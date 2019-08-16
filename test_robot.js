@@ -3,12 +3,11 @@ const dli = require('./data_layer_interface.js');
 /**
  * TEST FUNCTIONS
  */
-const testOnboardAndCacheCookies = async (username, password) => {
+const testOnboardAndCacheCookies = async (username, password, clss) => {
     dli.initDatabase()
         .then(async () => {
-            const cl = 'EAS-203-001';
             const user = await robot.onboardUser(username, password);
-            await robot.addUser(user);
+            await robot.addUserToClass(user, clss);
         })
         .catch((err) => {
             console.log('An error has occurred');
@@ -43,6 +42,6 @@ const testSignInExistingUser = async () => {
 /**
  * Uncomment to run individual tests
  */
-// testOnboardAndCacheCookies('jackrose', 'goodinstructionisbetterthanriches').catch((err) => console.log(err));
+// testOnboardAndCacheCookies('jackrose', 'goodinstructionisbetterthanriches', 'EAS-203-001').catch((err) => console.log(err));
 // testSignInExistingUser().catch((err) => console.log(err));
 // testSignUpExistingUser('EAS-203-001', 'NN').catch((err) => console.log(err));

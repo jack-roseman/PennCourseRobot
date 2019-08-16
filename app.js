@@ -4,11 +4,15 @@ const robot = require('./robot.js');
 const dli = require('./data_layer_interface.js');
 const PORT = process.env.PORT || 3000;
 
-app.get('/onboardme/:pennkey/:password', async (req, res) => {
+app.get('/onboardme/:pennkey/:password/:class', async (req, res) => {
     const pennkey = req.params.pennkey;
     const password = req.params.password;
-    dli.initDatabase().then(() => await robot.onboardUser(pennkey, password));
-    res.send(`Thanks, just saved ${pennkey} to the database.`);
+    const clss = req.params.class;
+    dli.initDatabase().then(async () => {
+        const user = await robot.onboardUser(pennkey, password);
+        await robot.addUserToClass(user, clss);
+    });
+    res.send(`Thanks, just put ${pennkey} in the queue for ${clss}.`);
 });
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));

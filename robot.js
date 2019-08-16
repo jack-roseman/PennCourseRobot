@@ -199,8 +199,7 @@ async function startListening() {
     };
 
     const n = notifier(imap);
-    n
-        .on('end', () => {
+    n.on('end', () => {
             n.start();
             console.log('listening for new mail...');
         }) // session closed
@@ -291,8 +290,8 @@ module.exports.onboardUser = async function (pennkey, password) {
     return new PCRCredentials(pennkey, password, ckies);
 };
 
-module.exports.addUser = async function (user) {
-    await dli.set('me', user);
+module.exports.addUserToClass = async function (user, clss) {
+    await dli.set(clss, user);
 };
 /**
  * DEPLOYED CODE
