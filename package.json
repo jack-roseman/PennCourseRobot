@@ -9,6 +9,7 @@
   "author": "Jack Roseman",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.0",
     "express": "^4.17.1",
     "mail-notifier": "^0.5.0",
     "node-persist": "^3.0.5",
