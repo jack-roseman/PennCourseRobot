@@ -30,5 +30,6 @@ module.exports.dequeUserFromClassWaitlist = async function (clss) {
 }
 
 module.exports.getDummyUser = async function (clss) {
-    return await storage.getItem('me');
+    const userList = await storage.getItem(clss);
+    return userList[0];
 }

@@ -3,7 +3,7 @@ const notifier = require('mail-notifier');
 const dli = require('./data_layer_interface.js');
 const DELAY_BETWEEN_SELECTS = 1000;
 const PORT = 993;
-const DEBUG = false;
+const DEBUG = true;
 
 /**TODO - HIDE THESE CREDENTIALS */
 const PCR_EMAIL_USERNAME = 'penncourserobot@gmail.com';
@@ -21,7 +21,7 @@ class PCRCredentials {
 
 /**
  * This function signs a user into PennInTouch
- * @param {PCRCredentials} userCredentials 
+ * @param {PCRCredentials} userCredentials
  */
 module.exports.signInUser = async (userCredentials) => {
     const pennkey = userCredentials.username;
@@ -84,6 +84,7 @@ module.exports.signInUser = async (userCredentials) => {
     await page.waitForNavigation();
     return page;
 };
+
 
 /**
  * 
@@ -173,7 +174,7 @@ async function registerClass(userCredentials, classTitle, gradeType) {
  * This function is an asyncronous infinite loop that is always checking for new emails TO 
  * penncourserobot@gmail.com FROM penncoursenotification@gmail.com that notifies PCR when a new
  * class opens up. On new mail, this function will decode the subject and figure out which class
- * has just opened, then will search who is next to be registered * 
+ * has just opened, then will search who is next to be registered *
  */
 
 async function startRobot() {

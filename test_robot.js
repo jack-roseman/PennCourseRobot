@@ -11,8 +11,9 @@ const testOnboardAndCacheCookies = async (username, password, clss) => {
 
 const testSignInExistingUser = async () => {
     await dli.initDatabase();
-    const user = await dli.getDummyUser();
+    const user = await dli.getDummyUser('EAS-203-001');
     await robot.signInUser(user);
+    s
 };
 
 
