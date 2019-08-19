@@ -1,0 +1,203 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Penn Course Robot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            width: 455px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 16px;
+            background-color: white;
+        }
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+        .registerbtn:hover {
+            opacity: 1;
+        }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+        .arrow-up {
+            width: 0;
+            height: 0;
+            margin: 0 auto;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #f2dede;
+        }
+
+        .info-text {
+            font-size: 17px;
+        }
+
+        .alert-danger {
+            border: none;
+            line-height: 1;
+        }
+
+        .course-type {
+            font-size: 12px;
+        }
+
+        .alert {
+            width: 420px;
+            position: relative;
+            margin: 0px auto;
+        }
+
+        .course-alert {
+            display: none;
+        }
+
+        .other-input {
+            width: 420px;
+            font-size: 24px;
+            line-height: 30px;
+            border: 2px solid #ccc;
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            outline: none;
+            padding: 10px 10px;
+            margin: 5px 0 5px 0;
+        }
+
+        .other-input:focus,
+        .typeahead:focus {
+            outline: none;
+            border-color: #9ecaed;
+
+            /* make it glow! */
+            -webkit-box-shadow: 0 0 10px #0097cf;
+            -moz-box-shadow: 0 0 10px #0097cf;
+            box-shadow: 0 0 10px #0097cf;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .input-error {
+            background-color: #f2dede;
+        }
+
+        @media (max-width: 480px) {
+
+            .typeahead,
+            .other-input,
+            .tt-dropdown-menu,
+            .tt-hint,
+            .alert,
+
+            .info-text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 420px) {
+
+            .typeahead,
+            .other-input,
+            .tt-dropdown-menu,
+            .tt-hint,
+            .alert {
+                width: 100%;
+            }
+        }
+    </style>
+    <link href="typeahead.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="typeahead.js"></script>
+    <script src="hogan-2.0.0.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <form id="course-form" method="POST">
+            <h1>Penn Course Robot</h1>
+            <p>Please fill in this form to be added to a class queue. When your desired class opens up, Penn Course
+                Robot will register you on your behalf.</p>
+            <hr>
+            <input class="typeahead" type="text" name="clss" value="" placeholder="Course Name" required>
+            <div class="course-alert">
+                <div class="arrow-up"></div>
+                <div class="alert alert-danger">
+                    Please make sure this class is open on PennInTouch, or this will not work
+                </div>
+            </div>
+            <input class="other-input" type="text" name="pennkey" value="" placeholder="PennKey" required>
+            <input class="other-input" type="password" name="psw" value="" placeholder="Password" required>
+            <hr>
+            <p>By registering you agree to our <a href="#">Terms & Privacy</a>.</p>
+
+            <button type="submit" class="registerbtn">Add Me To Class Waitlist</button>
+
+        </form>
+    </div>
+</body>
+<script>
+    // Slides up error
+    setTimeout(function () {
+        $('.error').slideUp();
+    }, 7000);
+
+    // Twitter typeahead script
+    $('input.typeahead').typeahead({
+        name: 'courses',
+        prefetch: '/courselist.txt',
+        template: [
+            '<p class="course-title">{{value}}</p>',
+            '<p class="course-type">{{title}} - {{course_type}}</p>'
+        ].join(''),
+        engine: Hogan
+    }).on('keyup', function () {
+        $('.course-alert').slideUp();
+    }).on('typeahead:selected typeahead:autocompleted', function ($e, datum) {
+        $.get("/check?course=" + datum.value, function (data, status) {
+            if (data === "O") {
+                $('.course-alert').fadeIn();
+                $('input.tt-hint').css('background-color', '#f2dede');
+            } else {
+                $('input.tt-hint').css('background-color', '#FFFFFF');
+            }
+        })
+    });
+</script>
+
+</html>
