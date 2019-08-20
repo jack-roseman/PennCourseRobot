@@ -140,6 +140,13 @@
                 width: 100%;
             }
         }
+
+        button.link {
+            background: none;
+            border: none;
+            color: dodgerblue;
+            font-size: 17px;
+        }
     </style>
     <link href="typeahead.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -158,7 +165,7 @@
             <div class="course-alert">
                 <div class="arrow-up"></div>
                 <div class="alert alert-danger">
-                    Please make sure this class is open on PennInTouch, or this will not work
+                    Please make sure this class is open on PennInTouch, or this will not work.
                 </div>
             </div>
             <input class="other-input" type="text" name="pennkey" value="" placeholder="PennKey" required>
@@ -166,7 +173,11 @@
             <input class="other-input" type="email" name="email" value="" placeholder="Email (for notification)"
                 required>
             <hr>
-            <p>By registering you agree to our <a href="#">Terms & Privacy</a>.</p>
+            <div style="display: inline">
+                <input type="checkbox" name="agree" required>
+                <p>I agree to the <button class="link" onclick="termsandconditions()">Terms & Privacy</button>.</p>
+
+            </div>
 
             <button type="submit" class="registerbtn">Add Me To Class Waitlist</button>
             <div class="error" style="display: none;">
@@ -176,8 +187,16 @@
     </div>
 </body>
 <script>
-    function animate() {
-        console.log("hello");
+    function termsandconditions() {
+        window.alert(
+            `TERMS AND PRIVACY: 
+            
+            You are agreeing to give PennCourseRobot your PennKey and Password so that it can register for a class on your behalf. 
+            
+            Penn Course Robot promises not to share your information with anyone. 
+            
+            Penn Course Robot will delete your information after successful registration or when the registration period closes.`
+        );
     }
     // Slides up error
     setTimeout(function () {
