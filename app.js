@@ -19,20 +19,25 @@ app.get('/check', async (req, res) => {
 	res.send('C');
 });
 
-app.post('/', async (req, res) => {
+app.post('/register', async (req, res) => {
 	const pennkey = req.body.pennkey;
 	const password = req.body.psw;
 	const clss = req.body.clss;
-	const errs = await robot.registerNotificationFor(clss);
+	const errs = await robot.registerNotificationFor(clss).catch((err) => err);
 	if (errs == '') {
 		//Successfully registered for a notification
 		await dli.initDatabase();
-		const user = await robot.onboardUser(pennkey, password);
-		await robot.addUserToWaitlist(user, clss);
-		res.send(`Thanks, just put ${pennkey} in the queue for ${clss}. I will wait for the class to open and then register you on your behalf!`);
+		const user = await robot.onboardUser(pennkey, password).catch((err) => err);
+		if (user) {
+			await robot.addUserToWaitlist(user, clss);
+			res.send(`Thanks, just put ${pennkey} in the queue for ${clss}. I will wait for the class to open and then register you on your behalf!`);
+		} else {
+			res.send("Something went wrong. Please try again later.");
+		}
+
 	} else {
 		//PennCourseNotify Error
-		res.send(`PennCourseNotify reported an error.You will have to try again at another time: <b> ${errs} </b>`);
+		res.send(`PennCourseNotify reported an error. You will have to try again at another time: <b> Error ${errs} </b>`);
 	}
 });
 
