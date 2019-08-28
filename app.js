@@ -29,19 +29,18 @@ app.post('/register', async (req, res) => {
 		await dli.initDatabase();
 		const user = await robot.onboardUser(pennkey, password).catch((err) => err);
 		if (user) {
-			await robot.addUserToWaitlist(user, clss);
-			res.send(`Thanks, just put ${pennkey} in the queue for ${clss}. I will wait for the class to open and then register you on your behalf!`);
+			robot.addUserToWaitlist(user, clss);
+			res.send(`<h3>Thanks, just put ${pennkey} in the queue for ${clss}. I will wait for the class to open and then register you on your behalf!</h3>`);
 		} else {
-			res.send("Something went wrong. Please try again later.");
+			res.send("<h3>Something went wrong. Please try again later.</h3>");
 		}
-
 	} else {
 		//PennCourseNotify Error
-		res.send(`PennCourseNotify reported an error. You will have to try again at another time: <b> Error ${errs} </b>`);
+		res.send(`<h3>PennCourseNotify reported an error. You will have to try again at another time. <br> <b> ${errs} </b></h3>`);
 	}
 });
 
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
+app.listen(PORT, () => console.log(`DEBUG app listening on port ${PORT}!`));
 
 async function downloadStaticFile(url, filename) {
 	const path = Path.resolve(__dirname, 'public', filename);
@@ -55,9 +54,6 @@ async function downloadStaticFile(url, filename) {
 	response.data.pipe(writer);
 
 	return new Promise((resolve, reject) => {
-		writer.on('data', (data) => {
-			console.log(data);
-		});
 		writer.on('end', () => {
 			console.log('Resource Downloaded');
 			resolve();
