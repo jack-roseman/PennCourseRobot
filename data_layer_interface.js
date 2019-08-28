@@ -18,16 +18,15 @@ module.exports.enqueUserToClassWaitlist = async function (clss, usr) {
 }
 
 module.exports.dequeUserFromClassWaitlist = async function (clss) {
-    storage.getItem(clss).then(async (q) => {
+    storage.getItem(clss).then((q) => {
         if (q) {
             const usr = q.pop();
-            await storage.setItem(clss, q);
+            storage.setItem(clss, q);
             return usr;
         } else {
             throw new Error('No such class exception');
         }
     });
-    return 
 }
 
 module.exports.getDummyUser = async function (clss) {

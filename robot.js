@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const notifier = require('mail-notifier');
 const dli = require('./data_layer_interface.js');
 const DELAY_BETWEEN_SELECTS = 1000;
-const DEBUG = false;
+const DEBUG = true;
 
 /**TODO - HIDE THESE CREDENTIALS */
 const PCR_EMAIL_USERNAME = 'penncourserobot@gmail.com';
@@ -190,14 +190,11 @@ module.exports.start = async function () {
 	const n = notifier(imap);
 	n.on('mail', async (mail) => {
 		const addr = mail.from[0].address;
-		if (addr == 'penncoursenotification@gmail.com') {
+		if (addr == 'penncoursenotification@gmail.com' || addr == 'jackroseman33@yahoo.com') {
 			const subj = mail.subject;
 			const patt = /[A-Z]*-[0-9]*-[0-9]*/;
 			var classTitle = subj.match(patt)[0];
-			const usr = await dli.dequeUserFromClassWaitlist(classTitle);
-			registerClass(usr, classTitle, 'NN');
-		} else {
-			console.log("new email");
+			dli.dequeUserFromClassWaitlist(classTitle).then(usr => registerClass(usr, classTitle, 'NN'));
 		}
 	}).on('end', function () {
 		n.start();
