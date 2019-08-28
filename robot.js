@@ -199,7 +199,7 @@ module.exports.start = async function () {
 		} else {
 			console.log("new email");
 		}
-	}).on('end', () => {
+	}).on('end', function () {
 		n.start();
 		console.log('listening for new mail...');
 	})
@@ -293,10 +293,19 @@ module.exports.onboardUser = async function (pennkey, password) {
 	return new PCRCredentials(pennkey, password, ckies);
 };
 
+/**
+ * This function allows a user to be added into the class on the database
+ * @param {PCRCredentials} user 
+ * @param {String} clss
+ */
 module.exports.addUserToWaitlist = async function (user, clss) {
 	await dli.enqueUserToClassWaitlist(clss, user);
 };
 
+/**
+ * This function registers for a class notification for the robot
+ * @param {String} clss
+ */
 module.exports.registerNotificationFor = async function (clss) {
 	const browser = await puppeteer.launch({
 		headless: !DEBUG,

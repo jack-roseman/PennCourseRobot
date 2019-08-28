@@ -27,6 +27,7 @@ module.exports.dequeUserFromClassWaitlist = async function (clss) {
             throw new Error('No such class exception');
         }
     });
+    return 
 }
 
 module.exports.getDummyUser = async function (clss) {
