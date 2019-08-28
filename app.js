@@ -6,6 +6,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 })); // support encoded bodies
 const robot = require('./robot.js');
+
 const Path = require('path');
 const dli = require('./data_layer_interface.js');
 const Axios = require('axios');
@@ -30,17 +31,34 @@ app.post('/register', async (req, res) => {
 		const user = await robot.onboardUser(pennkey, password).catch((err) => err);
 		if (user) {
 			robot.addUserToWaitlist(user, clss);
-			res.send(`<h3>Thanks, just put ${pennkey} in the queue for ${clss}. I will wait for the class to open and then register you on your behalf!</h3>`);
+			res.send(`<h2>Thanks, just put ${pennkey} in the queue for ${clss}. I will wait for the class to open and then register you on your behalf!</h2>`);
 		} else {
-			res.send("<h3>Something went wrong. Please try again later.</h3>");
+			res.send("<h2>Something went wrong. Please try again later.</h2>");
 		}
 	} else {
 		//PennCourseNotify Error
-		res.send(`<h3>PennCourseNotify reported an error. You will have to try again at another time. <br> <b> ${errs} </b></h3>`);
+		if (errs == '503') {
+			res.send(`<h2>PennCourseNotify reported an error.</h2> <br> <p> PennCourseNotify is down. This usually happens at the end of the day. Please come back tomorrow morning and try again. </p>`);
+		} else {
+			res.send(`<h2>PennCourseNotify reported an error.</h2> <br> <p> ${errs} </p>`);
+		}
 	}
 });
 
-app.listen(PORT, () => console.log(`DEBUG app listening on port ${PORT}!`));
+
+
+app.listen(PORT, function () {
+	console.log(`DEBUG app listening on port ${PORT}!`)
+	dli.initDatabase().then(robot.start());
+});
+
+
+
+
+
+
+
+
 
 async function downloadStaticFile(url, filename) {
 	const path = Path.resolve(__dirname, 'public', filename);
@@ -65,5 +83,6 @@ async function downloadStaticFile(url, filename) {
 		});
 	});
 }
+
 
 //downloadStaticFile('http://www.penncoursenotify.com/course_list', 'courselist.txt');

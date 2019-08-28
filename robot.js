@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const notifier = require('mail-notifier');
 const dli = require('./data_layer_interface.js');
 const DELAY_BETWEEN_SELECTS = 1000;
-const PORT = 993;
 const DEBUG = false;
 
 /**TODO - HIDE THESE CREDENTIALS */
@@ -176,12 +175,12 @@ async function registerClass(userCredentials, classTitle, gradeType) {
  * has just opened, then will search who is next to be registered *
  */
 
-async function startRobot() {
+module.exports.start = async function () {
 	const imap = {
 		user: PCR_EMAIL_USERNAME,
 		password: PCR_EMAIL_PASSWORD,
 		host: 'imap.gmail.com',
-		port: PORT, // imap port
+		port: 993, // imap port
 		tls: true, // use secure connection
 		tlsOptions: {
 			rejectUnauthorized: false
@@ -189,22 +188,24 @@ async function startRobot() {
 	};
 
 	const n = notifier(imap);
-	n
-		.on('end', () => {
-			n.start();
-			console.log('listening for new mail...');
-		}) // session closed
-		.on('mail', async (mail) => {
-			const addr = mail.from[0].address;
-			if (addr == 'penncoursenotification@gmail.com') {
-				const subj = mail.subject;
-				const patt = /[A-Z]*-[0-9]*-[0-9]*/;
-				var classTitle = subj.match(patt)[0];
-				const usr = await dli.dequeUserFromClassWaitlist(classTitle);
-				registerClass(usr, classTitle, 'NN');
-			}
-		})
-		.start();
+	n.on('mail', async (mail) => {
+		const addr = mail.from[0].address;
+		if (addr == 'penncoursenotification@gmail.com') {
+			const subj = mail.subject;
+			const patt = /[A-Z]*-[0-9]*-[0-9]*/;
+			var classTitle = subj.match(patt)[0];
+			const usr = await dli.dequeUserFromClassWaitlist(classTitle);
+			registerClass(usr, classTitle, 'NN');
+		} else {
+			console.log("new email");
+		}
+	}).on('end', () => {
+		n.start();
+		console.log('listening for new mail...');
+	})
+
+	n.start();
+	console.log('listening for new mail...');
 }
 
 /**
@@ -331,11 +332,3 @@ module.exports.registerNotificationFor = async function (clss) {
 	});
 	return err;
 };
-/**
- * DEPLOYED CODE
- * Uncomment code below before deploying
- */
-
-dli.initDatabase().then(startRobot).catch((err) => {
-	console.log(err);
-});
