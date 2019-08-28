@@ -5,8 +5,8 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
 	extended: true
 })); // support encoded bodies
-const robot = require('./robot.js');
 
+const robot = require('./robot.js');
 const Path = require('path');
 const dli = require('./data_layer_interface.js');
 const Axios = require('axios');
@@ -16,7 +16,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static('public'));
 
 app.get('/check', async (req, res) => {
-	//todo send 'C' if class is closed, other wise send 'O'
+	//TODO send 'C' if class is closed, other wise send 'O'
+	//console.log(req.query.course);
 	res.send('C');
 });
 
@@ -44,7 +45,6 @@ app.post('/register', async (req, res) => {
 		}
 	}
 });
-
 
 
 app.listen(PORT, function () {
