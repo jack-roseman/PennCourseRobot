@@ -6,7 +6,7 @@ const DEBUG = false;
 
 /**TODO - HIDE THESE CREDENTIALS */
 const PCR_EMAIL_USERNAME = 'penncourserobot@gmail.com';
-const PCR_EMAIL_PASSWORD = 'THEmanfrompoland33';
+const PCR_EMAIL_PASSWORD = 'incorrect_password';
 
 /** CLASSES */
 class PCRCredentials {
